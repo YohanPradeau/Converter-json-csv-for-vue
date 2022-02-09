@@ -8,13 +8,10 @@ Take 2 arguments :
 - target (path to the file you want to parse)
 
 example :
-"converter.py source-language.json file-to-convert.json" will create a csv of this file in the ./convertedFiles/ of the converter.py directory with the following format :
-
+"converter.py source-language.json file-to-convert.json" will create a csv of this file in the ./convertedFiles/ of the converter.py directory with the following format :<br/>
 | Parent (do not edit)  | Source language | Translation |
 | ------------- | ------------- | ------------- |
 | key | word | mot |
 
 
-You can now translate in the csv directly. Once this is done, you can type :
-
-"converter.py ./convertedFiles/file-to-convert.json.csv" and it will create in the ./convertedFiles/ folder a file-to-convert.json, ready to be used!
+You can now translate in the csv directly. Once this is done, you can type "converter.py ./convertedFiles/file-to-convert.json.csv" and it will create in the ./convertedFiles/ folder a file-to-convert.json, ready to be used!
