@@ -11,16 +11,21 @@ from flatten_json import unflatten
 
 #Arguments
 argparser = argparse.ArgumentParser()
-argparser.add_argument("source",  nargs='?', type=str, help="The source language (only used when you want to json to csv)" ,default="no_path")
+argparser.add_argument("source1",  nargs='?', type=str, help="The first source language (only used when you want to json to csv)" ,default="no_path")
+argparser.add_argument("source2",  nargs='?', type=str, help="The second source language (only used when you want to json to csv)" ,default="no_path")
 argparser.add_argument("target", type=str, help="The file to convert")
 
 args = argparser.parse_args()
 path = os.path.dirname(__file__)
 fullpathTarget = os.path.join(os.path.dirname(__file__), args.target)
 fileTarget = args.target
-if args.source != "no_path" :
-    fullpathSource = os.path.join(os.path.dirname(__file__), args.source)
-    fileSource = args.source
+if args.source1 != "no_path" :
+    fullpathSource1 = os.path.join(os.path.dirname(__file__), args.source1)
+    fileSource1 = args.source1
+
+if args.source2 != "no_path" :
+    fullpathSource2 = os.path.join(os.path.dirname(__file__), args.source2)
+    fileSource2 = args.source2
 
 filename = os.path.basename(args.target)
 type = fileTarget[fileTarget.rfind('.') + 1::]
@@ -49,15 +54,17 @@ def csv_to_json(): #Function for the csv to json conversion
 
 def json_to_csv(): #Function for the json to csv conversion
     try:
-        with open(fullpathSource,"r",encoding="utf-8") as f:
-            fileSource = pandas.json_normalize(json.loads(f.read()))
+        with open(fullpathSource1,"r",encoding="utf-8") as f:
+            fileSource1 = pandas.json_normalize(json.loads(f.read()))
+        with open(fullpathSource2,"r",encoding="utf-8") as f:
+            fileSource2 = pandas.json_normalize(json.loads(f.read()))
         with open(fullpathTarget,"r",encoding="utf-8") as f:
             fileTarget = pandas.json_normalize(json.loads(f.read()))
-        df = pandas.concat([fileTarget, fileSource], ignore_index=True)
+        df = pandas.concat([fileTarget, fileSource1, fileSource2], ignore_index=True)
 
         with open(path+"\convertedFiles\\"+filename+".csv", 'w', encoding="utf-8", newline='') as output:
             csvwriter = csv.writer(output)
-            fr = ["Parent (do not edit)", "Source language" ,"Translation"]
+            fr = ["Key (do not edit)", "Source language 1 (FR)", "Source language 2 (EN)" ,"Translation"]
             csvwriter.writerow(fr)
 
             pandas.set_option("display.max_rows", None, "display.max_columns", None)
@@ -65,11 +72,16 @@ def json_to_csv(): #Function for the json to csv conversion
                 row = []
                 parent = elem
                 # print(df[elem])
-                src = df[elem][1]
+                src1 = df[elem][1]
+                src2 = df[elem][2]
                 tl = df[elem][0]
                 row.append(parent)
-                row.append(src)
-                row.append(tl)
+                row.append(src1)
+                row.append(src2)
+                if not tl :
+                    row.append(src2)
+                else :
+                    row.append(tl)
                 csvwriter.writerow(row)
         print("Done ! \nYou can check the file at the following path : "+ path+"\convertedFiles\\"+filename+".csv")
 
@@ -96,7 +108,7 @@ if type == "csv":
     else:
         csv_to_json()
 elif type == "json":
-    if args.source != "no_path":
+    if args.source1 != "no_path" and args.source2 != "no_path":
         outputPath=path+"\convertedFiles\\"+filename+".csv"
         fileExist = Path(outputPath).is_file()
         if fileExist:
@@ -111,7 +123,7 @@ elif type == "json":
         else:
             json_to_csv()
     else:
-        print("Source language argument is needed for the json -> csv operation.")
+        print("Source language arguments are needed for the json -> csv operation.")
     
 else:
     print("Only CSV and JSON file type are accepted.")
