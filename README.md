@@ -3,12 +3,15 @@ A small python soft which can be used to parse json files to csv and csv to json
 
 "./converter.py -h" for help
 
-Take 1 parameter : 
-- file (path to the file you want to parse)
+Take 2 arguments : 
+- source (optionnal : path to a source language file, mandatory for the json -> csv only)
+- target (path to the file you want to parse)
 
 example :
-"converter.py file-to-convert.json" will create a csv of this file in the ./convertedFiles/ of the converter.py directory.
-You can now translate in the csv directly. Once this is done, you can type :
-"converter.py ./convertedFiles/file-to-convert.json.csv" and it will create in the ./convertedFiles/ folder a file-to-convert.json, ready to be used!
+"converter.py source-language.json file-to-convert.json" will create a csv of this file in the ./convertedFiles/ of the converter.py directory with the following format :<br/>
+| Parent (do not edit)  | Source language | Translation |
+| ------------- | ------------- | ------------- |
+| key | word | mot |
 
-Open source
+
+You can now translate in the csv directly. Once this is done, you can type "converter.py ./convertedFiles/file-to-convert.json.csv" and it will create in the ./convertedFiles/ folder a file-to-convert.json, ready to be used!
